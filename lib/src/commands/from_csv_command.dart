@@ -7,9 +7,9 @@
 
 import 'dart:io';
 
-import 'package:arb_tooling/src/extensions/file_extensions.dart';
 import 'package:arb_tooling/src/models/arb_file.dart';
 import 'package:arb_tooling/src/models/csv_parser.dart';
+import 'package:arb_tooling/src/models/from_csv_settings.dart';
 import 'package:arb_tooling/src/utils/file_writer.dart';
 import 'package:arb_tooling/src/utils/validator.dart';
 import 'package:args/command_runner.dart';
@@ -25,13 +25,31 @@ class FromCSVCommand extends Command<int> {
   FromCSVCommand({
     Logger? logger,
   }) : _logger = logger ?? Logger() {
-    argParser.addOption(
-      'input_filepath',
-      abbr: 'i',
-      mandatory: true,
-      help: 'Path to the input CSV file',
-    );
+    argParser
+      ..addOption(
+        inputPathKey,
+        abbr: 'i',
+        mandatory: true,
+        help: 'Path to the input CSV file',
+      )
+      ..addOption(
+        outputDirectoryKey,
+        abbr: 'o',
+        mandatory: true,
+        help: 'Path to the output directory for ARB files',
+      )
+      ..addOption(
+        filenamePrependKey,
+        abbr: 'p',
+        help: 'Text to prepend to filename of generated ARB files.',
+      );
   }
+
+  late final FromCSVSettings settings;
+
+  String get inputPathKey => 'input-filepath';
+  String get filenamePrependKey => 'filename-prepend';
+  String get outputDirectoryKey => 'output-directory';
 
   @override
   String get description => 'Transforms CSV to ARB';
@@ -45,38 +63,32 @@ class FromCSVCommand extends Command<int> {
   Future<int> run() async {
     const fieldDelimiter = ',';
     const startIndex = 2;
-    const outputDirectory = 'output';
-    const filenamePrepend = 'app_';
     const descriptionIndex = 1;
+
     try {
-      //* Validation
-      final filePath = argResults?['input_filepath'] as String?;
+      //* Validate command settings
+      settings = FromCSVSettings(
+        inputFilepath: argResults?[inputPathKey] as String,
+        outputDir: argResults?[outputDirectoryKey] as String,
+        filePrependName: argResults?[filenamePrependKey] as String? ?? '',
+      );
+
+      final filePath = argResults?[inputPathKey] as String?;
       if (filePath == null) {
         throw ArgumentError('input_filepath was not specified.');
       }
       final file = File(filePath);
-
       Validator.validateFile(file, 'csv');
-      if (!file.hasCSVExtension) {
-        throw ArgumentError('File ${file.path} is not CSV.');
-      }
-      if (!file.existsSync()) {
-        throw ArgumentError('File ${file.path} not found.');
-      }
+
+      // * Parse file to CSV
       final parser = CSVParser(
         file: file,
         startIndex: startIndex,
         fieldDelimiter: fieldDelimiter,
       );
 
+      // * Validate parsed file
       final supportedLanguages = parser.supportedLanguages;
-
-      _logger.info(
-        parser.parsedContents
-            .map((element) => element.length)
-            .toList()
-            .toString(),
-      );
 
       Validator.validateSupportedLanguages(supportedLanguages);
 
@@ -93,6 +105,7 @@ class FromCSVCommand extends Command<int> {
         );
       }
 
+      //* Generate a file for each supported language
       for (final supportedLanguage in supportedLanguages) {
         final content = _generateARBFile(
           language: supportedLanguage,
@@ -104,7 +117,7 @@ class FromCSVCommand extends Command<int> {
 
         //* Write content to file
         final path =
-            'example/$outputDirectory/$filenamePrepend$supportedLanguage.arb';
+            '${settings.outputDir}/${settings.filePrependName}$supportedLanguage.arb';
         FileWriter().write(
           contents: content.toJson(),
           path: path,

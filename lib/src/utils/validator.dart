@@ -53,7 +53,7 @@ abstract class Validator {
     final key = row.key;
     if (constants.reservedWords.contains(key)) {
       throw ArgumentError(
-        'Key $key in row ${row.raw} is a reserved keyword in Dart and is thus invalid.',
+        '''Key $key in row ${row.raw} is a reserved keyword in Dart and is thus invalid.''',
       );
     }
 

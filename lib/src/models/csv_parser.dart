@@ -25,17 +25,5 @@ class CSVParser extends FileParser {
     for (final row in converted) {
       parsedContents.add(row.map((e) => e.toString()).toList());
     }
-
-    // for (final line in lines) {
-    //   final converted = _csvConverter.convert(
-    //     line,
-    //     fieldDelimiter: fieldDelimiter,
-    //   );
-
-    //   final lineElements =
-    //       converted.first.map((element) => element.toString()).toList();
-
-    //   parsedContents.add(lineElements);
-    // }
   }
 }

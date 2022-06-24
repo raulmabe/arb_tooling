@@ -27,11 +27,11 @@ dart pub global activate --source=path <path to this package>
 ## Usage
 
 ```sh
-# Sample command
-$ arb_tooling sample
+# To CSV command
+$ dart ./bin/arb_tooling.dart to_csv -i example/input/arb -o example/output
 
-# Sample command optioon
-$ arb_tooling sample --cyan
+# From CSV command
+$ dart ./bin/arb_tooling.dart from_csv -i example/input/csv/translations.csv -o example/output -p app_
 
 # Show CLI version
 $ arb_tooling --version

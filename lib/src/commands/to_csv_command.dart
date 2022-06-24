@@ -9,6 +9,8 @@ import 'dart:io';
 
 import 'package:arb_tooling/src/extensions/file_extensions.dart';
 import 'package:arb_tooling/src/models/arb_file.dart';
+import 'package:arb_tooling/src/models/to_csv_settings.dart';
+import 'package:arb_tooling/src/utils/validator.dart';
 import 'package:args/command_runner.dart';
 import 'package:csv/csv.dart';
 import 'package:mason_logger/mason_logger.dart';
@@ -23,13 +25,25 @@ class ToCSVCommand extends Command<int> {
   ToCSVCommand({
     Logger? logger,
   }) : _logger = logger ?? Logger() {
-    argParser.addOption(
-      'input_folder',
-      abbr: 'i',
-      mandatory: true,
-      help: 'Specifies the ARB input folder',
-    );
+    argParser
+      ..addOption(
+        inputDirKey,
+        abbr: 'i',
+        mandatory: true,
+        help: 'Specifies the folder where ARB files are',
+      )
+      ..addOption(
+        outputFolderKey,
+        abbr: 'o',
+        mandatory: true,
+        help: 'Specifies the folder where the CSV will be created',
+      );
   }
+
+  late final ToCSVSettings settings;
+
+  String get inputDirKey => 'input-folder';
+  String get outputFolderKey => 'output-folder';
 
   @override
   String get description => 'Transforms ARB to CSV';
@@ -42,11 +56,13 @@ class ToCSVCommand extends Command<int> {
   @override
   Future<int> run() async {
     try {
-      final folderPath = argResults?['input_folder'] as String?;
-      if (folderPath == null) {
-        throw ArgumentError('input_folder was not specified.');
-      }
-      final dir = Directory(folderPath);
+      settings = ToCSVSettings(
+        inputDir: argResults?[inputDirKey] as String,
+        outputDir: argResults?[outputFolderKey] as String,
+      );
+
+      //* Validate command settings
+      final dir = Directory(settings.inputDir);
 
       final entities = await dir.list().toList();
 
@@ -57,6 +73,11 @@ class ToCSVCommand extends Command<int> {
 
       if (files.isEmpty) throw ArgumentError('No ARB files found.');
 
+      for (final file in files) {
+        Validator.validateFile(file, 'arb');
+      }
+
+      //* Read file content
       final parsingFiles = files.map((e) => e.readAsString());
       final parsedContent = await Future.wait(parsingFiles);
       final parsingProgress = _logger.progress('Parsing');
@@ -64,10 +85,10 @@ class ToCSVCommand extends Command<int> {
       final supportedLanguages = parsedFiles.map((e) => e.locale).toList();
       parsingProgress.complete('Parsing complete $supportedLanguages');
 
+      //* Create CSV
       final csvList = [
         ['key', 'description', ...supportedLanguages.reversed],
       ];
-
       for (var i = 0; i < parsedFiles.first.messages.length; ++i) {
         csvList.add([
           parsedFiles[0].messages[i].key,
@@ -77,14 +98,11 @@ class ToCSVCommand extends Command<int> {
           ]
         ]);
       }
+      final csvString = const ListToCsvConverter().convert(csvList);
 
-      final csvString = const ListToCsvConverter(
-              // eol: '\n',
-              )
-          .convert(csvList, eol: '\r\n');
-
-      const filename = 'translations.csv';
-      const path = 'example/output/$filename';
+      //* Write CSV file
+      final filename = '${settings.name}.csv';
+      final path = '${settings.outputDir}/$filename';
       await File(path).writeAsString(csvString);
 
       _logger.success('File $filename created successfully in $path');
