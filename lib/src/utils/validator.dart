@@ -72,7 +72,7 @@ abstract class Validator {
     final words = row.words;
     if (words.length > numberSupportedLanguages) {
       throw ArgumentError(
-        '''The row ${row.raw} does not seem to be well formatted. Found ${words.length} values for numberSupportedLanguages locales.''',
+        '''The row ${row.raw} does not seem to be well formatted. Found ${words.length} values for $numberSupportedLanguages locales.''',
       );
     }
 

@@ -30,20 +30,20 @@ class ToCSVCommand extends Command<int> {
         inputDirKey,
         abbr: 'i',
         mandatory: true,
-        help: 'Specifies the folder where ARB files are',
+        help: 'Specifies the directory where ARB files are',
       )
       ..addOption(
         outputFolderKey,
         abbr: 'o',
         mandatory: true,
-        help: 'Specifies the folder where the CSV will be created',
+        help: 'Specifies the directory where the CSV will be created',
       );
   }
 
   late final ToCSVSettings settings;
 
-  String get inputDirKey => 'input-folder';
-  String get outputFolderKey => 'output-folder';
+  String get inputDirKey => 'input-directory';
+  String get outputFolderKey => 'output-directory';
 
   @override
   String get description => 'Transforms ARB to CSV';

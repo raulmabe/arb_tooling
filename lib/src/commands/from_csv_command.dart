@@ -29,8 +29,12 @@ class FromCSVCommand extends Command<int> {
       ..addOption(
         inputPathKey,
         abbr: 'i',
-        mandatory: true,
         help: 'Path to the input CSV file',
+      )
+      ..addOption(
+        inputURLKey,
+        abbr: 'u',
+        help: 'URL to the input CSV file',
       )
       ..addOption(
         outputDirectoryKey,
@@ -48,6 +52,7 @@ class FromCSVCommand extends Command<int> {
   late final FromCSVSettings settings;
 
   String get inputPathKey => 'input-filepath';
+  String get inputURLKey => 'input-url';
   String get filenamePrependKey => 'filename-prepend';
   String get outputDirectoryKey => 'output-directory';
 
@@ -68,17 +73,37 @@ class FromCSVCommand extends Command<int> {
     try {
       //* Validate command settings
       settings = FromCSVSettings(
-        inputFilepath: argResults?[inputPathKey] as String,
+        inputFilepath: argResults?[inputPathKey] as String?,
+        urlFile: argResults?[inputURLKey] as String?,
         outputDir: argResults?[outputDirectoryKey] as String,
         filePrependName: argResults?[filenamePrependKey] as String? ?? '',
       );
 
-      final filePath = argResults?[inputPathKey] as String?;
-      if (filePath == null) {
-        throw ArgumentError('input_filepath was not specified.');
+      if (settings.urlFile == null && settings.inputFilepath == null) {
+        throw ArgumentError(
+          '''You must specify an input file, whether is from an url or local path''',
+        );
       }
-      final file = File(filePath);
-      Validator.validateFile(file, 'csv');
+
+      //* Build File
+      final filePath = settings.inputFilepath;
+      late final File file;
+      var isFileTemporal = false;
+      if (filePath != null) {
+        file = File(filePath);
+        Validator.validateFile(file, 'csv');
+      } else {
+        isFileTemporal = true;
+        const tmpPath = 'tmp.csv';
+        final request = await HttpClient().getUrl(Uri.parse(settings.urlFile!));
+        final response = await request.close();
+        await response.pipe(
+          File(tmpPath).openWrite(),
+        );
+        file = File(tmpPath);
+
+        Validator.validateFile(file, 'csv');
+      }
 
       // * Parse file to CSV
       final parser = CSVParser(
@@ -89,6 +114,7 @@ class FromCSVCommand extends Command<int> {
 
       // * Validate parsed file
       final supportedLanguages = parser.supportedLanguages;
+      // _logger.detail(supportedLanguages.toString());
 
       Validator.validateSupportedLanguages(supportedLanguages);
 
@@ -124,6 +150,10 @@ class FromCSVCommand extends Command<int> {
         );
 
         _logger.success('Generated $path');
+      }
+
+      if (isFileTemporal) {
+        await file.delete();
       }
     } catch (e) {
       _logger.err(e.toString());

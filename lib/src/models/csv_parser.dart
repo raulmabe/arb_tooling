@@ -22,6 +22,7 @@ class CSVParser extends FileParser {
       csv,
       fieldDelimiter: fieldDelimiter,
     );
+
     for (final row in converted) {
       parsedContents.add(row.map((e) => e.toString()).toList());
     }

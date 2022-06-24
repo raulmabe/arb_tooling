@@ -13,7 +13,7 @@ class ToCSVSettings extends CSVSettings {
 
   /// Required.
   ///
-  /// Specifies the folder from where ARB files are going to be parsed.
+  /// Specifies the directory from where ARB files are going to be parsed.
   final String inputDir;
 
   /// A directory to generate the output CSV file.
