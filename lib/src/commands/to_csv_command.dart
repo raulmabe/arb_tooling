@@ -18,9 +18,9 @@ import 'package:mason_logger/mason_logger.dart';
 /// `arb2csv sample`
 /// A [Command] to exemplify a sub command
 /// {@endtemplate}
-class TransformCommand extends Command<int> {
+class ToCSVCommand extends Command<int> {
   /// {@macro sample_command}
-  TransformCommand({
+  ToCSVCommand({
     Logger? logger,
   }) : _logger = logger ?? Logger() {
     argParser.addOption(
@@ -35,7 +35,7 @@ class TransformCommand extends Command<int> {
   String get description => 'Transforms ARB to CSV';
 
   @override
-  String get name => 'transform';
+  String get name => 'to_csv';
 
   final Logger _logger;
 
@@ -78,12 +78,16 @@ class TransformCommand extends Command<int> {
         ]);
       }
 
-      final csvString = const ListToCsvConverter().convert(csvList);
+      final csvString = const ListToCsvConverter(
+              // eol: '\n',
+              )
+          .convert(csvList, eol: '\r\n');
 
       const filename = 'translations.csv';
-      await File(filename).writeAsString(csvString);
+      const path = 'example/output/$filename';
+      await File(path).writeAsString(csvString);
 
-      _logger.success('File $filename created successfully');
+      _logger.success('File $filename created successfully in $path');
     } catch (e) {
       _logger.err(e.toString());
       return ExitCode.ioError.code;

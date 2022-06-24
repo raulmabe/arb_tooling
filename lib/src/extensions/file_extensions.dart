@@ -4,4 +4,5 @@ extension FileExtension on File {
   String get extensionType => path.split('.').last.toLowerCase();
 
   bool get hasARBExtension => extensionType == 'arb';
+  bool get hasCSVExtension => extensionType == 'csv';
 }

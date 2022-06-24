@@ -49,11 +49,15 @@ class Message {
 
   factory Message.fromMap(Map<String, dynamic> map) {
     final key = map.keys.first;
+    final child = map['@$key'] as JSON?;
+    if (child == null) {
+      throw ArgumentError('@$key not found');
+    }
 
     return Message(
       key: key,
       value: map[key] as String,
-      description: (map['@$key'] as JSON)['description'] as String? ?? '',
+      description: child['description'] as String? ?? '',
     );
   }
   final String key;
