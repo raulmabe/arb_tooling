@@ -1,1 +1,19 @@
-{"@@locale":"es","hello":"Hola mundo!","@hello":{"description":"Hello world"},"placeholder":"Hola {name}","@placeholder":{"description":"Example of placeholder"},"plural":"{number,plural, =0{Agotadas} =1{1 plaza libre} other{{number} plazas libres}}","@plural":{"description":"Example of plural"},"endOfLine":"Introducelo para verificar.\nMira la carpeta de spam también.","@endOfLine":{"description":"Example of end of line"}}
+{
+     "@@locale": "es",
+     "hello": "Hola mundo!",
+     "@hello": {
+          "description": "Hello world"
+     },
+     "placeholder": "Hola {name}",
+     "@placeholder": {
+          "description": "Example of placeholder"
+     },
+     "plural": "{number,plural, =0{Agotadas} =1{1 plaza libre} other{{number} plazas libres}}",
+     "@plural": {
+          "description": "Example of plural"
+     },
+     "endOfLine": "Introducelo para verificar.\nMira la carpeta de spam también.",
+     "@endOfLine": {
+          "description": "Example of end of line"
+     }
+}

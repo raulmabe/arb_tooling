@@ -1,1 +1,19 @@
-{"@@locale":"en","hello":"Hello world!","@hello":{"description":"Hello world"},"placeholder":"Hello {name}","@placeholder":{"description":"Example of placeholder"},"plural":"{number,plural, =0{Sold out} =1{1 spot left} other{{number} spots left}}","@plural":{"description":"Example of plural"},"endOfLine":"Enter it below to verify it.\nCheck your spam folder as well.","@endOfLine":{"description":"Example of end of line"}}
+{
+     "@@locale": "en",
+     "hello": "Hello world!",
+     "@hello": {
+          "description": "Hello world"
+     },
+     "placeholder": "Hello {name}",
+     "@placeholder": {
+          "description": "Example of placeholder"
+     },
+     "plural": "{number,plural, =0{Sold out} =1{1 spot left} other{{number} spots left}}",
+     "@plural": {
+          "description": "Example of plural"
+     },
+     "endOfLine": "Enter it below to verify it.\nCheck your spam folder as well.",
+     "@endOfLine": {
+          "description": "Example of end of line"
+     }
+}

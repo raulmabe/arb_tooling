@@ -5,6 +5,7 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:arb_tooling/src/models/arb_file.dart';
@@ -94,18 +95,18 @@ class FromCSVCommand extends Command<int> {
         Validator.validateFile(file, 'csv');
       } else {
         isFileTemporal = true;
-        const tmpPath = 'tmp.csv';
-        final request = await HttpClient().getUrl(Uri.parse(settings.urlFile!));
-        final response = await request.close();
-        await response.pipe(
-          File(tmpPath).openWrite(),
-        );
-        file = File(tmpPath);
-
-        Validator.validateFile(file, 'csv');
+        final downloadProgress = _logger.progress('Downloading CSV');
+        try {
+          file = await getFileFromURL(settings.urlFile!);
+          downloadProgress.complete('Downloaded CSV');
+        } catch (e) {
+          downloadProgress.cancel();
+          rethrow;
+        }
       }
 
       // * Parse file to CSV
+      final parsingProgress = _logger.progress('Parsing CSV to ARB');
       final parser = CSVParser(
         file: file,
         startIndex: startIndex,
@@ -114,15 +115,13 @@ class FromCSVCommand extends Command<int> {
 
       // * Validate parsed file
       final supportedLanguages = parser.supportedLanguages;
-      // _logger.detail(supportedLanguages.toString());
 
       Validator.validateSupportedLanguages(supportedLanguages);
 
-      _logger.info('Locales detected $supportedLanguages');
-
       final localizationsTable = parser.localizationsTable;
 
-      _logger.info('Parsing ${localizationsTable.length} key(s)...');
+      _logger.detail('Locales detected $supportedLanguages');
+      parsingProgress.complete('Parsed ${localizationsTable.length} key(s)');
 
       for (final _row in localizationsTable) {
         Validator.validateLocalizationTableRow(
@@ -141,11 +140,14 @@ class FromCSVCommand extends Command<int> {
           descriptions: parser.getColumn(descriptionIndex),
         );
 
+        const encoder = JsonEncoder.withIndent('     ');
+        final jsonPretty = encoder.convert(content.toMap());
+
         //* Write content to file
         final path =
             '${settings.outputDir}/${settings.filePrependName}$supportedLanguage.arb';
         FileWriter().write(
-          contents: content.toJson(),
+          contents: jsonPretty,
           path: path,
         );
 
@@ -187,6 +189,19 @@ class FromCSVCommand extends Command<int> {
       );
     }
     final file = ARBFile(locale: language, messages: messages);
+    return file;
+  }
+
+  Future<File> getFileFromURL(String url) async {
+    const tmpPath = 'tmp.csv';
+    final request = await HttpClient().getUrl(Uri.parse(url));
+    final response = await request.close();
+    await response.pipe(
+      File(tmpPath).openWrite(),
+    );
+    final file = File(tmpPath);
+
+    Validator.validateFile(file, 'csv');
     return file;
   }
 }
