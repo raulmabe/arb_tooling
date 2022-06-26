@@ -1,6 +1,6 @@
 name: arb_tooling
 description: Dart tool to translate from ARB to CSV and viceversa.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/raulmabe/arb_tooling/
 repository: https://github.com/raulmabe/arb_tooling/
 issue_tracker: https://github.com/raulmabe/arb_tooling/issues
