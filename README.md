@@ -1,4 +1,4 @@
-## ARB Tooling
+# ARB Tooling
 
 ![ARB Tooling Logo][arb_tooling_logo]
 
@@ -7,7 +7,7 @@ Developed with 💙 by [Raul Mabe][raulmabe_link]
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 [![License: MIT][license_badge]][license_link]
 
-Dart tool to translate from ARB to CSV and viceversa.
+Dart tool to convert from ARB to CSV and viceversa.
 
 ---
 
@@ -17,7 +17,7 @@ Dart tool to translate from ARB to CSV and viceversa.
 - **Key** must be column with index `0`.
 - **Description** is mandatory and must be column with index `1`.
 - **Base language** must be column with index `2`.
-- **eol** is must be `\r\n`.
+- **eol** must be `\r\n`.
 
 Check `/example` folder to see the formatted files.
 
@@ -33,6 +33,45 @@ Or locally via:
 
 ```sh
 dart pub global activate --source=path <path to this package>
+```
+
+Or execute the binary (`bin/arb_tooling.exe`); which can be generated via:
+
+```sh
+dart compile exe bin/arb_tooling.dart
+```
+
+## Features and usage
+
+- ✅ Convert from ARB files to CSV file
+
+```sh
+# To CSV command
+$ dart ./bin/arb_tooling.dart to_csv -i example/input/arb -o example/output
+```
+
+- ✅ Convert from CSV file to ARB files
+
+```sh
+# From CSV command
+$ dart ./bin/arb*tooling.dart from_csv -i example/input/csv/translations.csv -o example/output -p app*
+```
+
+- ✅ Convert from CSV file hosted in URL to ARB files
+
+```sh
+# From CSV command -> URL
+$ dart ./bin/arb*tooling.dart from_csv -u https://docs.google.com/spreadsheets/d/{sheet_id}/export\?format\=csv\&id\={sheet_id}\&gid\={gid} -o example/output -p app*
+```
+
+- More
+
+```sh
+# Show CLI version
+$ arb_tooling --version
+
+# Show usage help
+$ arb_tooling --help
 ```
 
 ## Example files
@@ -111,51 +150,9 @@ This ARB file can then be converted into localization delegates using [intl](htt
 **Note**
 This process can also be reversed via the `to_csv` commmand.
 
-## Usage
-
-```sh
-# To CSV command
-$ dart ./bin/arb_tooling.dart to_csv -i example/input/arb -o example/output
-
-# From CSV command -> Local file
-$ dart ./bin/arb_tooling.dart from_csv -i example/input/csv/translations.csv -o example/output -p app_
-
-# From CSV command -> URL
-$ dart ./bin/arb_tooling.dart from_csv -u https://docs.google.com/spreadsheets/d/{sheet_id}/export\?format\=csv\&id\={sheet_id}\&gid\={gid} -o example/output -p app_
-
-# Show CLI version
-$ arb_tooling --version
-
-# Show usage help
-$ arb_tooling --help
-```
-
-## Running Tests with coverage 🧪
-
-To run all unit tests use the following command:
-
-```sh
-$ dart pub global activate coverage 1.2.0
-$ dart test --coverage=coverage
-$ dart pub global run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info
-```
-
-To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov)
-.
-
-```sh
-# Generate Coverage Report
-$ genhtml coverage/lcov.info -o coverage/
-
-# Open Coverage Report
-$ open coverage/index.html
-```
-
----
-
 [license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [license_link]: https://opensource.org/licenses/MIT
 [very_good_analysis_badge]: https://img.shields.io/badge/style-very_good_analysis-B22C89.svg
 [very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
 [raulmabe_link]: https://raulmabe.dev
-[arb_tooling_logo]: logo.png
+[arb_tooling_logo]: https://github.com/raulmabe/arb_tooling/raw/89afb4b897e6fc0cab233f8f65a6398ca66ce751/logo.png

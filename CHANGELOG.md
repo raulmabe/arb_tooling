@@ -1,4 +1,10 @@
-# 0.0.1
+# 0.0.3
+
+- docs: Restructured README.md
+- fix: Logo in README.md
+- chore: Added binary to `bin` directory
+
+# 0.0.2
 
 - feature: Generate ARB files from a CSV file
 - feature: Generate ARB files from URL which hosts a CSV file
