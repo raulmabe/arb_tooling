@@ -1,3 +1,7 @@
+# 0.0.4
+
+- build: Downgrade `meta` dependency to `1.7.0`
+
 # 0.0.3
 
 - docs: Restructured README.md
