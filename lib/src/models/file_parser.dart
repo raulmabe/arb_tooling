@@ -61,6 +61,26 @@ abstract class FileParser {
         .toList(growable: false);
   }
 
+  List<List<String>> getPlaceholders() {
+    final values = getColumn(startIndex);
+    final vars = <List<String>>[];
+    for (final value in values) {
+      final regex = RegExp(r'\{[a-zA-Z]+(\}|\,)');
+      final placeholders = regex.allMatches(value);
+      final strings = placeholders
+          .map((e) => e[0].toString().substring(1, e[0].toString().length - 1))
+          .toList();
+
+      if (strings.length > 1 &&
+          (value.contains('plural') || value.contains('select'))) {
+        strings.removeRange(1, strings.length);
+      }
+
+      vars.add(strings);
+    }
+    return vars;
+  }
+
   /// Returns a column from localizations table
   List<String> getColumn(int index) => parsedContents
       .sublist(_numberHeaderLines)
@@ -84,6 +104,7 @@ abstract class FileParser {
 }
 
 /// A model representing a row in a `LocalizationTable`
+@immutable
 class LocalizationTableRow {
   const LocalizationTableRow({
     required this.key,
@@ -121,7 +142,9 @@ class LocalizationTableRow {
 }
 
 /// Compares two lists for deep equality.
-/// Returns true if the lists are both null, or if they are both non-null, have the same length, and contain the same members in the same order. Returns false otherwise.
+/// Returns true if the lists are both null, or if they are both non-null, have
+/// the same length, and contain the same members in the same order.
+/// Returns false otherwise.
 ///
 /// The term "deep" above refers to the first level of equality: if the elements are maps, lists, sets, or other collections/composite objects, then the values of those elements are not compared element by element unless their equality operators (Object.==) do so.
 ///

@@ -1,3 +1,9 @@
+# 0.0.5
+
+- fix: commands in docs having a typo
+- fix: `version.dart` not being generated after build
+- fix: `placeholders` were not being generated
+
 # 0.0.4
 
 - build: Downgrade `meta` dependency to `1.7.0`

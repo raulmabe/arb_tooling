@@ -138,6 +138,7 @@ class FromCSVCommand extends Command<int> {
           values: parser.getValues(supportedLanguage),
           defaultValues: parser.defaultValues,
           descriptions: parser.getColumn(descriptionIndex),
+          placeholders: parser.getPlaceholders(),
         );
 
         const encoder = JsonEncoder.withIndent('     ');
@@ -170,6 +171,7 @@ class FromCSVCommand extends Command<int> {
     required List<String> values,
     required List<String> defaultValues,
     List<String>? descriptions,
+    List<List<String>>? placeholders,
   }) {
     if (keys.length != values.length && keys.length != defaultValues.length) {
       throw ArgumentError('Mismatch number of keys and values');
@@ -177,6 +179,8 @@ class FromCSVCommand extends Command<int> {
 
     final messages = <Message>[];
     for (var i = 0; i < keys.length; i++) {
+      final hasPlaceholders =
+          placeholders?[i] != null && placeholders![i].isNotEmpty;
       final value = i < values.length && values[i].isNotEmpty
           ? values[i]
           : defaultValues[i];
@@ -185,6 +189,12 @@ class FromCSVCommand extends Command<int> {
           key: keys[i],
           value: value,
           description: descriptions?[i],
+          placeholders: hasPlaceholders
+              ? {
+                  for (final placeholder in placeholders[i])
+                    placeholder: <String, dynamic>{}
+                }
+              : null,
         ),
       );
     }

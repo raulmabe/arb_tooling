@@ -43,6 +43,7 @@ class Message {
     required this.key,
     required this.value,
     this.description,
+    this.placeholders,
   });
   factory Message.fromJson(String source) =>
       Message.fromMap(json.decode(source) as JSON);
@@ -53,22 +54,39 @@ class Message {
     if (child == null) {
       throw ArgumentError('@$key not found');
     }
+    final value = map[key] as String;
+
+    final regex = RegExp(r'\{[a-zA-Z]+(\}|\,)');
+
+    final placeholders = regex.allMatches(value);
+
+    if (placeholders.length > 1 && value.contains('plural')) {
+      placeholders.toList().removeRange(1, placeholders.length);
+    }
+    final hasPlaceholders = placeholders.isNotEmpty;
 
     return Message(
       key: key,
-      value: map[key] as String,
-      description: child['description'] as String? ?? '',
+      value: value,
+      description: child['description'] as String?,
+      placeholders: hasPlaceholders
+          ? {
+              for (final placeholder in placeholders) '$placeholder': JSON,
+            }
+          : null,
     );
   }
   final String key;
   final String value;
   final String? description;
+  final JSON? placeholders;
 
   Map<String, dynamic> toMap() {
     return {
       key: value,
       '@$key': {
         if (description != null) 'description': description,
+        if (placeholders != null) 'placeholders': placeholders,
       },
     };
   }

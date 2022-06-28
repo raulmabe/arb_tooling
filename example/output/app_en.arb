@@ -6,11 +6,17 @@
      },
      "placeholder": "Hello {name}",
      "@placeholder": {
-          "description": "Example of placeholder"
+          "description": "Example of placeholder",
+          "placeholders": {
+               "name": {}
+          }
      },
      "plural": "{number,plural, =0{Sold out} =1{1 spot left} other{{number} spots left}}",
      "@plural": {
-          "description": "Example of plural"
+          "description": "Example of plural",
+          "placeholders": {
+               "number": {}
+          }
      },
      "endOfLine": "Enter it below to verify it.\nCheck your spam folder as well.",
      "@endOfLine": {
