@@ -54,14 +54,14 @@ $ dart ./bin/arb_tooling.dart to_csv -i example/input/arb -o example/output
 
 ```sh
 # From CSV command
-$ dart ./bin/arb*tooling.dart from_csv -i example/input/csv/translations.csv -o example/output -p app*
+$ dart ./bin/arb_tooling.dart from_csv -i example/input/csv/translations.csv -o example/output -p app_
 ```
 
 - ✅ Convert from CSV file hosted in URL to ARB files
 
 ```sh
 # From CSV command -> URL
-$ dart ./bin/arb*tooling.dart from_csv -u https://docs.google.com/spreadsheets/d/{sheet_id}/export\?format\=csv\&id\={sheet_id}\&gid\={gid} -o example/output -p app*
+$ dart ./bin/arb_tooling.dart from_csv -u https://docs.google.com/spreadsheets/d/{sheet_id}/export\?format\=csv\&id\={sheet_id}\&gid\={gid} -o example/output -p app_
 ```
 
 - More
@@ -101,11 +101,17 @@ en.arb
   },
   "placeholder": "Hello {name}",
   "@placeholder": {
-    "description": "Example of placeholder"
+    "description": "Example of placeholder",
+    "placeholders": {
+      "name": {}
+    }
   },
   "plural": "{number,plural, =0{Sold out} =1{1 spot left} other{{number} spots left}}",
   "@plural": {
-    "description": "Example of plural"
+    "description": "Example of plural",
+    "placeholders": {
+      "number": {}
+    }
   },
   "endOfLine": "Enter it below to verify it.\nCheck your spam folder as well.",
   "@endOfLine": {
@@ -130,11 +136,17 @@ es.arb
   },
   "placeholder": "Hola {name}",
   "@placeholder": {
-    "description": "Example of placeholder"
+    "description": "Example of placeholder",
+    "placeholders": {
+      "name": {}
+    }
   },
   "plural": "{number,plural, =0{Agotadas} =1{1 plaza libre} other{{number} plazas libres}}",
   "@plural": {
-    "description": "Example of plural"
+    "description": "Example of plural",
+    "placeholders": {
+      "number": {}
+    }
   },
   "endOfLine": "Introducelo para verificar.\nMira la carpeta de spam también.",
   "@endOfLine": {
