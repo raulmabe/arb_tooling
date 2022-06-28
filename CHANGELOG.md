@@ -1,8 +1,9 @@
 # 0.0.5
 
-- fix: commands in docs having a typo
-- fix: `version.dart` not being generated after build
-- fix: `placeholders` were not being generated
+- fix: commands in docs having a typo.
+- fix: `version.dart` not being generated after build.
+- fix: `placeholders` were not being generated.
+- fix: take into account if outputDir has trailing slash already.
 
 # 0.0.4
 

@@ -8,6 +8,7 @@
 import 'dart:io';
 
 import 'package:arb_tooling/src/extensions/file_extensions.dart';
+import 'package:arb_tooling/src/extensions/string_extensions.dart';
 import 'package:arb_tooling/src/models/arb_file.dart';
 import 'package:arb_tooling/src/models/to_csv_settings.dart';
 import 'package:arb_tooling/src/utils/validator.dart';
@@ -58,7 +59,7 @@ class ToCSVCommand extends Command<int> {
     try {
       settings = ToCSVSettings(
         inputDir: argResults?[inputDirKey] as String,
-        outputDir: argResults?[outputFolderKey] as String,
+        outputDir: (argResults?[outputFolderKey] as String).noTrailingSlash,
       );
 
       //* Validate command settings

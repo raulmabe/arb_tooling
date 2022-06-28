@@ -8,6 +8,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:arb_tooling/src/extensions/string_extensions.dart';
 import 'package:arb_tooling/src/models/arb_file.dart';
 import 'package:arb_tooling/src/models/csv_parser.dart';
 import 'package:arb_tooling/src/models/from_csv_settings.dart';
@@ -76,7 +77,7 @@ class FromCSVCommand extends Command<int> {
       settings = FromCSVSettings(
         inputFilepath: argResults?[inputPathKey] as String?,
         urlFile: argResults?[inputURLKey] as String?,
-        outputDir: argResults?[outputDirectoryKey] as String,
+        outputDir: (argResults?[outputDirectoryKey] as String).noTrailingSlash,
         filePrependName: argResults?[filenamePrependKey] as String? ?? '',
       );
 

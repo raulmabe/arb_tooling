@@ -11,4 +11,9 @@ extension StringExtensions on String {
 
   /// Returns whether a variable name (i.e. myVar, my_var) is valid.
   bool get isValidVariableName => _validateVariableNamesRegex.hasMatch(this);
+
+  String get noTrailingSlash {
+    if (endsWith('/')) return substring(0, length - 1);
+    return this;
+  }
 }
