@@ -1,0 +1,20 @@
+{
+     "@@locale": "es",
+     "hello": "Hola mundo!",
+     "aaaa": "Spanish test!",
+     "placeholder": "Hola {name}",
+     "@placeholder": {
+          "description": "Example of placeholder",
+          "placeholders": {
+               "name": {}
+          }
+     },
+     "plural": "{number,plural, =0{Agotadas} =1{1 plaza libre} other{{number} plazas libres}}",
+     "@plural": {
+          "description": "Example of plural",
+          "placeholders": {
+               "number": {}
+          }
+     },
+     "endOfLine": "Introducelo para verificar.\r\nMira la carpeta de spam también."
+}

@@ -1,0 +1,20 @@
+{
+     "@@locale": "en",
+     "hello": "Hello world!",
+     "aaaa": "English test!",
+     "placeholder": "Hello {name}",
+     "@placeholder": {
+          "description": "Example of placeholder",
+          "placeholders": {
+               "name": {}
+          }
+     },
+     "plural": "{number,plural, =0{Sold out} =1{1 spot left} other{{number} spots left}}",
+     "@plural": {
+          "description": "Example of plural",
+          "placeholders": {
+               "number": {}
+          }
+     },
+     "endOfLine": "Enter it below to verify it.\r\nCheck your spam folder as well."
+}

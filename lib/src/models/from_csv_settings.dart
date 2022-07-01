@@ -6,6 +6,7 @@ class FromCSVSettings extends CSVSettings {
     this.urlFile,
     this.outputDir = '',
     this.filePrependName = '',
+    this.useJsonExtension = false,
     super.baseIndex,
     super.descriptionIndex,
     super.eol,
@@ -32,4 +33,7 @@ class FromCSVSettings extends CSVSettings {
   ///
   /// Defaults to empty string.
   final String filePrependName;
+
+  /// If true, it will generate `.json` files instead of `.arb`.
+  final bool useJsonExtension;
 }

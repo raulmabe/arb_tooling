@@ -1,0 +1,6 @@
+{
+    "conventionalCommits.scopes": [
+        "from_csv",
+        "to_csv"
+    ]
+}

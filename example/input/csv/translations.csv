@@ -1,5 +1,6 @@
 key,description,en,es
 hello,Hello world,Hello world!,Hola mundo!
+aaaa,,English test!,Spanish test!
 placeholder,Example of placeholder,Hello {name},Hola {name}
 plural,Example of plural,"{number,plural, =0{Sold out} =1{1 spot left} other{{number} spots left}}","{number,plural, =0{Agotadas} =1{1 plaza libre} other{{number} plazas libres}}"
 endOfLine,Example of end of line,"Enter it below to verify it.

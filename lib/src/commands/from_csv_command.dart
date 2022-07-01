@@ -48,6 +48,9 @@ class FromCSVCommand extends Command<int> {
         filenamePrependKey,
         abbr: 'p',
         help: 'Text to prepend to filename of generated ARB files.',
+      )
+      ..addFlag(
+        'json',
       );
   }
 
@@ -79,6 +82,7 @@ class FromCSVCommand extends Command<int> {
         urlFile: argResults?[inputURLKey] as String?,
         outputDir: (argResults?[outputDirectoryKey] as String).noTrailingSlash,
         filePrependName: argResults?[filenamePrependKey] as String? ?? '',
+        useJsonExtension: argResults?['json'] as bool? ?? false,
       );
 
       if (settings.urlFile == null && settings.inputFilepath == null) {
@@ -145,9 +149,10 @@ class FromCSVCommand extends Command<int> {
         const encoder = JsonEncoder.withIndent('     ');
         final jsonPretty = encoder.convert(content.toMap());
 
+        final extension = settings.useJsonExtension ? 'json' : 'arb';
         //* Write content to file
         final path =
-            '${settings.outputDir}/${settings.filePrependName}$supportedLanguage.arb';
+            '${settings.outputDir}/${settings.filePrependName}$supportedLanguage.$extension';
         FileWriter().write(
           contents: jsonPretty,
           path: path,

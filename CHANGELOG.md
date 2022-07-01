@@ -1,5 +1,6 @@
 # 0.0.6
 
+- feat(from_csv): add `--json` flag to generate files with `.json` extension.
 - fix(from_csv): do not generate meta key if `description` and `placeholders` are empty.
 
 # 0.0.5
@@ -21,6 +22,6 @@
 
 # 0.0.2
 
-- feature: Generate ARB files from a CSV file
-- feature: Generate ARB files from URL which hosts a CSV file
-- feature: Generate CSV file from ARB files
+- feat: Generate ARB files from a CSV file
+- feat: Generate ARB files from URL which hosts a CSV file
+- feat: Generate CSV file from ARB files
