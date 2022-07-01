@@ -15,7 +15,7 @@ Dart tool to convert from ARB to CSV and viceversa.
 
 - **Field delimiter** must be `,`.
 - **Key** must be column with index `0`.
-- **Description** is mandatory and must be column with index `1`.
+- **Description** is mandatory (empty cells will be ignored when generating ARB) and must be column with index `1`.
 - **Base language** must be column with index `2`.
 - **eol** must be `\r\n`.
 
