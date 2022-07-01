@@ -1,3 +1,7 @@
+# 0.0.6
+
+- fix(from_csv): do not generate meta key if `description` and `placeholders` are empty.
+
 # 0.0.5
 
 - fix: commands in docs having a typo.

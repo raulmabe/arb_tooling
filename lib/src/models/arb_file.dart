@@ -68,7 +68,7 @@ class Message {
     return Message(
       key: key,
       value: value,
-      description: child['description'] as String?,
+      description: (child['description'] as String?)?.trim(),
       placeholders: hasPlaceholders
           ? {
               for (final placeholder in placeholders) '$placeholder': JSON,
@@ -82,12 +82,15 @@ class Message {
   final JSON? placeholders;
 
   Map<String, dynamic> toMap() {
+    final hasDescription = description != null && description!.isNotEmpty;
+    final hasPlaceholders = placeholders != null && placeholders!.isNotEmpty;
     return {
       key: value,
-      '@$key': {
-        if (description != null) 'description': description,
-        if (placeholders != null) 'placeholders': placeholders,
-      },
+      if (hasPlaceholders && hasDescription)
+        '@$key': {
+          if (hasDescription) 'description': description,
+          if (placeholders != null) 'placeholders': placeholders,
+        },
     };
   }
 
