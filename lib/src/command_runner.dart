@@ -42,6 +42,7 @@ class ArbToolingCommandRunner extends CommandRunner<int> {
     // Add sub commands
     addCommand(FromCSVCommand(logger: logger));
     addCommand(ToCSVCommand(logger: logger));
+    addCommand(FileRenameCommand(logger: logger));
   }
 
   final Logger _logger;
