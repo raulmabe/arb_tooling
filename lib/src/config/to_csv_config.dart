@@ -1,7 +1,7 @@
-import 'package:arb_tooling/src/models/csv_settings.dart';
+import 'package:arb_tooling/src/config/csv_config.dart';
 
-class ToCSVSettings extends CSVSettings {
-  const ToCSVSettings({
+class ToCSVConfig extends CSVConfig {
+  const ToCSVConfig({
     this.inputDir = '',
     this.outputDir = '',
     this.name = 'translations',

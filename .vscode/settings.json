@@ -1,6 +1,3 @@
 {
-    "conventionalCommits.scopes": [
-        "from_csv",
-        "to_csv"
-    ]
+  "conventionalCommits.scopes": ["from_csv", "to_csv", "file_rename"]
 }

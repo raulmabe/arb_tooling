@@ -1,7 +1,7 @@
-import 'package:arb_tooling/src/models/csv_settings.dart';
+import 'package:arb_tooling/src/config/csv_config.dart';
 
-class FromCSVSettings extends CSVSettings {
-  const FromCSVSettings({
+class FromCSVConfig extends CSVConfig {
+  const FromCSVConfig({
     this.inputFilepath,
     this.urlFile,
     this.outputDir = '',

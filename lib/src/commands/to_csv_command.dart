@@ -7,10 +7,10 @@
 
 import 'dart:io';
 
+import 'package:arb_tooling/src/config/to_csv_config.dart';
 import 'package:arb_tooling/src/extensions/file_extensions.dart';
 import 'package:arb_tooling/src/extensions/string_extensions.dart';
 import 'package:arb_tooling/src/models/arb_file.dart';
-import 'package:arb_tooling/src/models/to_csv_settings.dart';
 import 'package:arb_tooling/src/utils/validator.dart';
 import 'package:args/command_runner.dart';
 import 'package:csv/csv.dart';
@@ -41,7 +41,7 @@ class ToCSVCommand extends Command<int> {
       );
   }
 
-  late final ToCSVSettings settings;
+  late final ToCSVConfig config;
 
   String get inputDirKey => 'input-directory';
   String get outputFolderKey => 'output-directory';
@@ -57,13 +57,13 @@ class ToCSVCommand extends Command<int> {
   @override
   Future<int> run() async {
     try {
-      settings = ToCSVSettings(
+      config = ToCSVConfig(
         inputDir: argResults?[inputDirKey] as String,
         outputDir: (argResults?[outputFolderKey] as String).noTrailingSlash,
       );
 
-      //* Validate command settings
-      final dir = Directory(settings.inputDir);
+      //* Validate command config
+      final dir = Directory(config.inputDir);
 
       final entities = await dir.list().toList();
 
@@ -102,8 +102,8 @@ class ToCSVCommand extends Command<int> {
       final csvString = const ListToCsvConverter().convert(csvList);
 
       //* Write CSV file
-      final filename = '${settings.name}.csv';
-      final path = '${settings.outputDir}/$filename';
+      final filename = '${config.name}.csv';
+      final path = '${config.outputDir}/$filename';
       await File(path).writeAsString(csvString);
 
       _logger.success('File $filename created successfully in $path');

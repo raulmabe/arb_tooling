@@ -8,10 +8,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:arb_tooling/src/config/from_csv_config.dart';
 import 'package:arb_tooling/src/extensions/string_extensions.dart';
 import 'package:arb_tooling/src/models/arb_file.dart';
 import 'package:arb_tooling/src/models/csv_parser.dart';
-import 'package:arb_tooling/src/models/from_csv_settings.dart';
 import 'package:arb_tooling/src/utils/file_writer.dart';
 import 'package:arb_tooling/src/utils/validator.dart';
 import 'package:args/command_runner.dart';
@@ -54,7 +54,7 @@ class FromCSVCommand extends Command<int> {
       );
   }
 
-  late final FromCSVSettings settings;
+  late final FromCSVConfig config;
 
   String get inputPathKey => 'input-filepath';
   String get inputURLKey => 'input-url';
@@ -76,8 +76,8 @@ class FromCSVCommand extends Command<int> {
     const descriptionIndex = 1;
 
     try {
-      //* Validate command settings
-      settings = FromCSVSettings(
+      //* Validate command config
+      config = FromCSVConfig(
         inputFilepath: argResults?[inputPathKey] as String?,
         urlFile: argResults?[inputURLKey] as String?,
         outputDir: (argResults?[outputDirectoryKey] as String).noTrailingSlash,
@@ -85,14 +85,14 @@ class FromCSVCommand extends Command<int> {
         useJsonExtension: argResults?['json'] as bool? ?? false,
       );
 
-      if (settings.urlFile == null && settings.inputFilepath == null) {
+      if (config.urlFile == null && config.inputFilepath == null) {
         throw ArgumentError(
           '''You must specify an input file, whether is from an url or local path''',
         );
       }
 
       //* Build File
-      final filePath = settings.inputFilepath;
+      final filePath = config.inputFilepath;
       late final File file;
       var isFileTemporal = false;
       if (filePath != null) {
@@ -102,7 +102,7 @@ class FromCSVCommand extends Command<int> {
         isFileTemporal = true;
         final downloadProgress = _logger.progress('Downloading CSV');
         try {
-          file = await getFileFromURL(settings.urlFile!);
+          file = await getFileFromURL(config.urlFile!);
           downloadProgress.complete('Downloaded CSV');
         } catch (e) {
           downloadProgress.cancel();
@@ -149,10 +149,10 @@ class FromCSVCommand extends Command<int> {
         const encoder = JsonEncoder.withIndent('     ');
         final jsonPretty = encoder.convert(content.toMap());
 
-        final extension = settings.useJsonExtension ? 'json' : 'arb';
+        final extension = config.useJsonExtension ? 'json' : 'arb';
         //* Write content to file
         final path =
-            '${settings.outputDir}/${settings.filePrependName}$supportedLanguage.$extension';
+            '${config.outputDir}/${config.filePrependName}$supportedLanguage.$extension';
         FileWriter().write(
           contents: jsonPretty,
           path: path,

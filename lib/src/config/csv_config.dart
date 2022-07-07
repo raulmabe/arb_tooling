@@ -1,5 +1,5 @@
-abstract class CSVSettings {
-  const CSVSettings({
+abstract class CSVConfig {
+  const CSVConfig({
     this.delimiter = ',',
     this.eol = '\r\n',
     this.descriptionIndex = 1,
