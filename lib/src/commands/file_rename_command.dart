@@ -27,12 +27,12 @@ class FileRenameCommand extends Command<int> {
         inputPathKey,
         abbr: 'i',
         help: 'Path to the input directory. Defaults to current directory.',
-        defaultsTo: '/',
+        defaultsTo: './',
       )
       ..addOption(
         inputRegExpKey,
         mandatory: true,
-        help: 'Name or RegExp that you want to change.',
+        help: 'Name that you want to change.',
       )
       ..addOption(
         outputNameKey,
@@ -42,6 +42,9 @@ class FileRenameCommand extends Command<int> {
   }
 
   late final FileRenameConfig config;
+
+  int filesCount = 0;
+  int dirCount = 0;
 
   String get inputPathKey => 'input-filepath';
   String get inputRegExpKey => 'from-name';
@@ -66,37 +69,65 @@ class FileRenameCommand extends Command<int> {
         outputName: argResults?[outputNameKey] as String,
       );
 
-      // * Count how many files match
+      // * filesCount how many files match
       final dir = Directory(config.inputDir);
-
-      final entities = await dir.list().toList();
-
-      final files = entities
-          .whereType<File>()
-          .where((element) => element.fileName.contains(config.inputName))
-          .toList();
-
-      if (files.isEmpty) {
-        _logger.warn('0 files matched with "${config.inputName}"');
-        return ExitCode.noInput.code;
-      }
-
-      _logger.alert(
-        'Found ${files.length}/${entities.length} files that match ${config.inputName}',
-      );
 
       //* Rename files
       final progressRenaming = _logger.progress('Renaming');
-      for (final file in files) {
-        file.renameSync(
-          file.path.replaceAll(RegExp(config.inputName), config.outputName),
-        );
-      }
-      progressRenaming.complete();
+      await renameAllFilesFromDir(dir);
+      progressRenaming
+          .complete('Renamed $filesCount files and $dirCount directories');
     } catch (e) {
       _logger.err(e.toString());
       return ExitCode.ioError.code;
     }
     return ExitCode.success.code;
+  }
+
+  Future<List<Directory>> getAllDirFromDir(Directory dir) async {
+    final entities = await dir.list().toList();
+    return entities.whereType<Directory>().toList();
+  }
+
+  Future<List<File>> getAllFilesFromDir(Directory dir) async {
+    final entities = await dir.list().toList();
+    return entities.whereType<File>().toList();
+  }
+
+  Future<void> renameAllFilesFromDir(Directory dir) async {
+    var cd = dir;
+
+    //* Rename dir if matches
+    if (cd.fileName.contains(config.inputName)) {
+      cd = await cd.changeNameOnly(
+        cd.fileName.replaceAll(RegExp(config.inputName), config.outputName),
+      );
+      dirCount++;
+    }
+
+    // * Get all elements from the directory
+    final _dirs = await getAllDirFromDir(cd);
+    final _files = await getAllFilesFromDir(cd);
+    final files = _files
+        .where((element) => element.fileName.contains(config.inputName))
+        .toList();
+
+    // * Rename all files in the directory
+    for (final file in files) {
+      await file.changeNameOnly(
+        '${file.fileName}.${file.extensionType}'
+            .replaceAll(RegExp(config.inputName), config.outputName),
+      );
+      filesCount++;
+    }
+
+    // * Rename the rest recursively
+    for (final _dir in _dirs) {
+      await renameAllFilesFromDir(_dir);
+    }
+
+    if (files.isEmpty) {
+      return;
+    }
   }
 }
