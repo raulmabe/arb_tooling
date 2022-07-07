@@ -1,3 +1,7 @@
+# 0.0.7
+
+- feat(file_rename): add `file_rename` command that allows to rename certain files from a certain directory.
+
 # 0.0.6
 
 - feat(from_csv): add `--json` flag to generate files with `.json` extension.
