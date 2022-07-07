@@ -64,6 +64,13 @@ $ dart ./bin/arb_tooling.dart from_csv -i example/input/csv/translations.csv -o 
 $ dart ./bin/arb_tooling.dart from_csv -u https://docs.google.com/spreadsheets/d/{sheet_id}/export\?format\=csv\&id\={sheet_id}\&gid\={gid} -o example/output -p app_
 ```
 
+- ✅ Rename files and directory names recursively inside a directory
+
+```sh
+# File rename
+$ dart ./bin/arb_tooling.dart file_rename -i ./lib/src/models --from-name settings --to-name config
+```
+
 - More
 
 ```sh
